@@ -16,8 +16,14 @@ public class Excel
 	
 	public static void main(String[] args) 
 	{
+		/*
 		String inputFilePath="G:\\workspace\\test.xlsx";
 		String outputFilePath="G:\\workspace\\output.xlsx";
+		*/
+		
+		String inputFilePath="D:\\Inetpub\\wwwroot\\roster-sample\\template.xlsx";
+		String outputFilePath="D:\\Inetpub\\wwwroot\\roster-sample\\output.xlsx";
+		
 		try 
 		{
 			 FileInputStream input_document = new FileInputStream(inputFilePath);
