@@ -4,19 +4,24 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.HashMap;
 
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellCopyPolicy;
+import org.apache.poi.ss.usermodel.CellStyle;
+
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFConditionalFormatting;
-import org.apache.poi.xssf.usermodel.XSSFConditionalFormattingRule;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFSheetConditionalFormatting;
@@ -30,12 +35,12 @@ public class Excel1 {
 
 	public static void main(String[] args) 
 	{
-		/*
+		
 		String inputFilePath="G:\\workspace\\template.xlsx";
 		String outputFilePath="G:\\workspace\\output.xlsx";
-		*/
-		String inputFilePath="D:\\Inetpub\\wwwroot\\roster-sample\\template.xlsx";
-		String outputFilePath="D:\\Inetpub\\wwwroot\\roster-sample\\output.xlsx";
+		
+		/*String inputFilePath="D:\\Inetpub\\wwwroot\\roster-sample\\template.xlsx";
+		String outputFilePath="D:\\Inetpub\\wwwroot\\roster-sample\\output.xlsx";*/
 		
 		File inputFile=new File(inputFilePath);
 		File outputFile=new File(outputFilePath);
@@ -52,26 +57,45 @@ public class Excel1 {
  			
             
             XSSFCell cell=sheet1.getRow(1).getCell(1);
- 			Calendar calendar = new GregorianCalendar(); 			
+ 			HashMap <Integer,String>weekdayNames=new HashMap<Integer,String>();
+            Calendar calendar = new GregorianCalendar(); 			
  			monthName=sheet2.getRow(calendar.get(Calendar.MONTH)).getCell(0).getStringCellValue()+" "+calendar.get(Calendar.YEAR);
  			cell.setCellValue(monthName);
+        	weekdayNames.put(Calendar.SUNDAY, "Su");
+        	weekdayNames.put(Calendar.MONDAY,"M");
+        	weekdayNames.put(Calendar.TUESDAY,"T");
+        	weekdayNames.put(Calendar.WEDNESDAY,"W");
+        	weekdayNames.put(Calendar.THURSDAY,"Th");
+        	weekdayNames.put(Calendar.FRIDAY,"F");
+        	weekdayNames.put(Calendar.SATURDAY,"S");   	
+        	
  			
  		    CalendarUtility calendarUtility=new CalendarUtility();
             MonthlyCalendar mc=calendarUtility.getMonthlyCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+            CellStyle style = workbook.createCellStyle();
+            XSSFFont font = workbook.createFont();
+            
+            font.setFontHeightInPoints((short) 12);
+            font.setFontName("Times New Roman");
+            font.setColor(HSSFColor.HSSFColorPredefined.RED.getIndex());
+            style.setAlignment(HorizontalAlignment.CENTER);
+            style.setFont(font);
+            style.setBorderLeft(BorderStyle.THIN);
+            style.setBorderRight(BorderStyle.THIN);
             for (int i=1;i<=mc.length;i++)
     		{
             	MyCalendar myCalendar=mc.getMonthlyCalendar().get(i);
             	cell=sheet1.getRow(3).getCell(i);
             	if (myCalendar.isPublicHoliday())
+            	{	
             		cell.setCellValue("PH");
+            	}
             	cell=sheet1.getRow(4).getCell(i);
-            	"Su"
-            	"M"
-            	"T"
-            	"W"
-                "Th"
-            	"F"
-            	"S"    	
+            	if (myCalendar.isPublicHoliday())
+            	{
+            		cell.setCellStyle(style);
+            	}
+            	cell.setCellValue(weekdayNames.get(myCalendar.getDayOfWeek()));
             	cell=sheet1.getRow(5).getCell(i);
             	cell.setCellValue(i);
     		} 			
@@ -82,9 +106,6 @@ public class Excel1 {
  			XSSFRow sourceRow=sheet2.getRow(12);
 			List<XSSFRow> sourceRows=new ArrayList<XSSFRow>();
  			CellCopyPolicy cellCopyPolicy=new CellCopyPolicy();
- 			/*cellCopyPolicy.setCopyCellFormula(true);
- 			cellCopyPolicy.setCopyCellStyle(true);
- 			cellCopyPolicy.setCopyCellValue(true);*/
  			sourceRows.add(sourceRow);
  			
  			sheet1.copyRows(sourceRows, 6,cellCopyPolicy);
@@ -95,7 +116,6 @@ public class Excel1 {
             { 
             	XSSFConditionalFormatting cf = sheet2cf.getConditionalFormattingAt(idx);
             	CellRangeAddress[]ranges=cf.getFormattingRanges();
-            	System.out.println("Before Range="+cf.getFormattingRanges().length);
             	ranges[0].setFirstRow(6);
             	ranges[0].setLastRow(6);
             	cf.setFormattingRanges(ranges);
