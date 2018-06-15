@@ -3,6 +3,7 @@
 	<name>Excel</name>
 	<comment></comment>
 	<projects>
+		<project>LunarCalendar</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
