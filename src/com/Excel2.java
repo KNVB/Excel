@@ -23,13 +23,14 @@ public class Excel2 {
 
 	public static void main(String[] args) 
 	{
-		/*String inputFilePath="G:\\workspace\\template.xlsx";
-		String outputFilePath="G:\\workspace\\output.xlsx";*/
+		String inputFilePath="G:\\workspace\\template.xlsx";
+		String outputFilePath="G:\\workspace\\output.xlsx";
 		
-		String inputFilePath="D:\\Inetpub\\wwwroot\\roster-sample\\template.xlsx";
+	/*	
+	    String inputFilePath="D:\\Inetpub\\wwwroot\\roster-sample\\template.xlsx";
 		String outputFilePath="D:\\Inetpub\\wwwroot\\roster-sample\\output.xlsx";
-		
-		File inputFile=new File(inputFilePath);
+	*/	
+		//File inputFile=new File(inputFilePath);
 		File outputFile=new File(outputFilePath);
 		
 		try
@@ -67,7 +68,7 @@ public class Excel2 {
  				for(int ruleNum=0;ruleNum<cf.getNumberOfRules();ruleNum++)
  				{
  					rule=cf.getRule(ruleNum);
- 					System.out.println(rule.getConditionFilterType());
+ 					System.out.printf("%s,%s,%s\n",rule.getFormula1(),rule.getFormula2(),rule.getConditionType());
  				}
  				/*CellRangeAddress[]ranges=cf.getFormattingRanges();
  				CellRangeAddress[]r2=new CellRangeAddress[ranges.length];

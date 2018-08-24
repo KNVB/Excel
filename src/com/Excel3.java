@@ -23,8 +23,8 @@ public class Excel3
 	public static void main(String[] args) 
 	{
 
-		//String outputFilePath="G:\\workspace\\output.xlsx";
-		String outputFilePath="D:\\Inetpub\\wwwroot\\roster-sample\\output.xlsx";
+		String outputFilePath="G:\\workspace\\output.xlsx";
+		//String outputFilePath="D:\\Inetpub\\wwwroot\\roster-sample\\output.xlsx";
 		File outputFile=new File(outputFilePath);
 		try 
 		{
@@ -37,21 +37,35 @@ public class Excel3
 			CellRangeAddress[] sheet1Range = {CellRangeAddress.valueOf("b7:Af12")};
  
 			XSSFConditionalFormattingRule aShiftRule = sheet1cf.createConditionalFormattingRule(ComparisonOperator.EQUAL,"\"a\"");
-			//XSSFConditionalFormattingRule bShiftRule = sheet1cf.createConditionalFormattingRule("NOT(ISERROR(SEARCH(\"b\"))");
+			XSSFConditionalFormattingRule bxShiftRule = sheet1cf.createConditionalFormattingRule("SEARCH(\"b\",b7:af11)");
 			XSSFConditionalFormattingRule cShiftRule = sheet1cf.createConditionalFormattingRule(ComparisonOperator.EQUAL,"\"c\"");
-			
+			XSSFConditionalFormattingRule dxShiftRule = sheet1cf.createConditionalFormattingRule("SEARCH(\"d\",b7:af11)");
+			XSSFConditionalFormattingRule oShiftRule = sheet1cf.createConditionalFormattingRule(ComparisonOperator.EQUAL,"\"O\"");
 			fillPattern = aShiftRule.createPatternFormatting();
 			
 			bgColor = new XSSFColor(new java.awt.Color(255, 153, 204));
 			fillPattern.setFillBackgroundColor(bgColor);
 			sheet1cf.addConditionalFormatting(sheet1Range, aShiftRule);
 
-			//sheet1cf.addConditionalFormatting(sheet1Range, bShiftRule);
+			fillPattern = bxShiftRule.createPatternFormatting();
+			bgColor = new XSSFColor(new java.awt.Color(255, 255, 204));
+			fillPattern.setFillBackgroundColor(bgColor);
+			sheet1cf.addConditionalFormatting(sheet1Range, bxShiftRule);
 			
 			bgColor = new XSSFColor(new java.awt.Color(204,255,204)); 
 			fillPattern = cShiftRule.createPatternFormatting();
 			fillPattern.setFillBackgroundColor(bgColor);
 			sheet1cf.addConditionalFormatting(sheet1Range, cShiftRule);
+			
+			bgColor = new XSSFColor(new java.awt.Color(204,255,255));
+			fillPattern = dxShiftRule.createPatternFormatting();
+			fillPattern.setFillBackgroundColor(bgColor);
+			sheet1cf.addConditionalFormatting(sheet1Range, dxShiftRule);
+			
+			bgColor = new XSSFColor(new java.awt.Color(255,255,255));
+			fillPattern =oShiftRule.createPatternFormatting();
+			fillPattern.setFillBackgroundColor(bgColor);
+			sheet1cf.addConditionalFormatting(sheet1Range, oShiftRule);
 			workbook.write(new FileOutputStream(outputFile));
 			workbook.close();
 		}
