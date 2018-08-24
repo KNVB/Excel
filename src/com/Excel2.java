@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.CellCopyPolicy;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFConditionalFormatting;
+import org.apache.poi.xssf.usermodel.XSSFConditionalFormattingRule;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFSheetConditionalFormatting;
@@ -33,7 +34,7 @@ public class Excel2 {
 		
 		try
 		{
-			Files.copy(inputFile.toPath(), outputFile.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			//Files.copy(inputFile.toPath(), outputFile.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(outputFile));
 			XSSFSheet sheet1 = workbook.getSheet("sheet1");
 			XSSFSheet sheet2 = workbook.getSheet("sheet2");
@@ -61,7 +62,14 @@ public class Excel2 {
  			for (int idx = 0; idx <sheet2cf.getNumConditionalFormattings(); idx++) 
             { 
  				XSSFConditionalFormatting cf = sheet2cf.getConditionalFormattingAt(idx);
- 				CellRangeAddress[]ranges=cf.getFormattingRanges();
+ 				XSSFConditionalFormattingRule rule;
+ 				System.out.println(cf);
+ 				for(int ruleNum=0;ruleNum<cf.getNumberOfRules();ruleNum++)
+ 				{
+ 					rule=cf.getRule(ruleNum);
+ 					System.out.println(rule.getConditionFilterType());
+ 				}
+ 				/*CellRangeAddress[]ranges=cf.getFormattingRanges();
  				CellRangeAddress[]r2=new CellRangeAddress[ranges.length];
  				
  				for (int j=0;j<ranges.length;j++)
@@ -70,10 +78,10 @@ public class Excel2 {
  				}
             	r2[0].setFirstRow(startRowNum);
             	r2[0].setLastRow(startRowNum+2);
-            	cf.setFormattingRanges(r2);
-            	sheet1cf.addConditionalFormatting(cf);
+            	cf.setFormattingRanges(r2);*/
+           // 	sheet1cf.addConditionalFormatting(cf);
             }
-			workbook.write(new FileOutputStream(outputFile));
+		//	workbook.write(new FileOutputStream(outputFile));
 			workbook.close();
 		}
 		catch (IOException e) 
